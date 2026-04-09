@@ -24,7 +24,10 @@ function Dashboard() {
             📷 Start Scan
           </button>
 
-          <button className="btn secondary">
+          <button
+            className="btn secondary"
+            onClick={() => navigate("/history")}
+          >
             📜 History
           </button>
         </div>

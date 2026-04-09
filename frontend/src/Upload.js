@@ -35,7 +35,16 @@ function Upload() {
       );
 
       const data = response.data;
+      // 🔥 SAVE TO HISTORY
+      const history = JSON.parse(localStorage.getItem("history")) || [];
 
+      history.unshift({
+        disease: data.disease,
+        confidence: data.confidence,
+        time: new Date().toLocaleString()
+      });
+
+      localStorage.setItem("history", JSON.stringify(history));
       // 🔥 Navigate to solution page
       navigate("/solution", {
         state: {
