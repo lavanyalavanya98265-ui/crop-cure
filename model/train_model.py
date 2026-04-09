@@ -1,40 +1,50 @@
 import tensorflow as tf
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
-from tensorflow.keras import layers, models
 
-# dataset path
-data_dir = "dataset"
+dataset_path = "dataset"
 
-# image preprocessing
-datagen = ImageDataGenerator(rescale=1./255, validation_split=0.2)
+train_datagen = ImageDataGenerator(
+    rescale=1./255,
+    rotation_range=20,
+    zoom_range=0.2,
+    horizontal_flip=True,
+    validation_split=0.2
+)
 
-train_data = datagen.flow_from_directory(
-    data_dir,
-    target_size=(128,128),
+train_generator = train_datagen.flow_from_directory(
+    dataset_path,
+    target_size=(224, 224),
     batch_size=32,
     class_mode='categorical',
     subset='training'
 )
 
-val_data = datagen.flow_from_directory(
-    data_dir,
-    target_size=(128,128),
+validation_generator = train_datagen.flow_from_directory(
+    dataset_path,
+    target_size=(224, 224),
     batch_size=32,
     class_mode='categorical',
     subset='validation'
 )
 
-# simple model
-model = models.Sequential([
-    layers.Conv2D(32, (3,3), activation='relu', input_shape=(128,128,3)),
-    layers.MaxPooling2D(2,2),
-    
-    layers.Conv2D(64, (3,3), activation='relu'),
-    layers.MaxPooling2D(2,2),
-    
-    layers.Flatten(),
-    layers.Dense(128, activation='relu'),
-    layers.Dense(train_data.num_classes, activation='softmax')
+model = Sequential([
+    Conv2D(32, (3,3), activation='relu', input_shape=(224,224,3)),
+    MaxPooling2D(2,2),
+
+    Conv2D(64, (3,3), activation='relu'),
+    MaxPooling2D(2,2),
+
+    Conv2D(128, (3,3), activation='relu'),
+    MaxPooling2D(2,2),
+
+    Flatten(),
+
+    Dense(128, activation='relu'),
+    Dropout(0.5),
+
+    Dense(train_generator.num_classes, activation='softmax')
 ])
 
 model.compile(
@@ -43,10 +53,12 @@ model.compile(
     metrics=['accuracy']
 )
 
-# train
-model.fit(train_data, validation_data=val_data, epochs=5)
+model.fit(
+    train_generator,
+    validation_data=validation_generator,
+    epochs=15
+)
 
-# save model
 model.save("plant_model.h5")
 
-print("Model trained and saved!")
+print("Model trained and saved successfully!")

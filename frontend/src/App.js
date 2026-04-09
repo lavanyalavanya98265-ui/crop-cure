@@ -1,9 +1,10 @@
-import Upload from "./Upload";
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
 import Dashboard from "./Dashboard";
 import Home from "./Home";
+import Upload from "./Upload";
+import Solution from "./Solution";
 
 function App() {
   return (
@@ -12,7 +13,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/upload" element={<Upload />} />
-
+        <Route path="/solution" element={<Solution />} /> {/* 🔥 THIS */}
       </Routes>
     </BrowserRouter>
   );

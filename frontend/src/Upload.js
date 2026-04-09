@@ -1,33 +1,27 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-// 🔥 STEP 1: Disease info (ADD HERE - TOP)
+// 🔥 Disease info
 const diseaseInfo = {
   "Potato___Early_blight": {
-    treatment: "Use fungicide spray and remove infected leaves.",
-    prevention: "Avoid overhead watering and ensure proper spacing."
-  },
-  "Potato___Late_blight": {
-    treatment: "Apply copper-based fungicides immediately.",
-    prevention: "Ensure good air circulation and avoid wet leaves."
-  },
-  "Tomato___Target_Spot": {
-    treatment: "Use appropriate fungicides and remove affected areas.",
-    prevention: "Keep foliage dry and maintain plant hygiene."
+    treatment: "Early blight is a fungal disease that affects potato leaves and stems. Remove infected leaves immediately. Apply fungicides regularly. Ensure proper spacing. Avoid watering leaves directly. Monitor plants daily.",
+    prevention: "Use resistant varieties. Maintain spacing. Rotate crops. Avoid overhead watering. Keep leaves dry. Clean tools regularly.",
   },
   "Healthy": {
-    treatment: "No treatment needed. Plant is healthy.",
-    prevention: "Maintain regular care and monitoring."
-  }
+    treatment: "The plant is healthy. Maintain regular care.",
+    prevention: "Provide sunlight, water, and nutrients properly.",
+  },
+  "Tomato_Early_blight": {
+    treatment: "Early blight is a fungal disease that affects tomato leaves and reduces yield. Remove infected leaves immediately to prevent spread. Apply fungicides such as chlorothalonil or copper-based sprays. Ensure proper spacing between plants to improve airflow. Avoid watering the leaves directly and keep foliage dry. Monitor plants regularly for early signs.",
+    prevention: "Use disease-resistant tomato varieties whenever possible. Maintain proper plant spacing to reduce humidity. Avoid overhead irrigation and water at the base of the plant. Rotate crops regularly to prevent soil infection. Keep the garden clean from plant debris. Ensure plants receive adequate sunlight."
+  },
 };
 
 function Upload() {
-
-  // 🔥 STEP 2: States (ADD HERE - INSIDE FUNCTION)
   const [file, setFile] = useState(null);
-  const [result, setResult] = useState(null);
+  const navigate = useNavigate(); // 🔥 THIS LINE
 
-  // 🔥 STEP 3: Upload function
   const handleUpload = async () => {
     if (!file) return;
 
@@ -40,11 +34,19 @@ function Upload() {
         formData
       );
 
-      setResult(response.data);
+      const data = response.data;
+
+      // 🔥 Navigate to solution page
+      navigate("/solution", {
+        state: {
+          result: data,
+          diseaseInfo: diseaseInfo
+        }
+      });
 
     } catch (error) {
       console.error("Error:", error);
-      alert("Error connecting to backend");
+      alert("Backend not connected");
     }
   };
 
@@ -52,7 +54,6 @@ function Upload() {
     <div style={{ textAlign: "center", marginTop: "50px" }}>
       <h2>📷 Upload Leaf Image</h2>
 
-      {/* 🔥 STEP 4: File input */}
       <input
         type="file"
         onChange={(e) => setFile(e.target.files[0])}
@@ -60,36 +61,7 @@ function Upload() {
 
       <br /><br />
 
-      {/* 🔥 STEP 5: Button */}
       <button onClick={handleUpload}>Predict</button>
-
-      {/* 🔥 STEP 6: Show result */}
-      {result && (
-        <div style={{ marginTop: "20px" }}>
-          <h3>Disease: {result.disease}</h3>
-          <h3>Confidence: {result.confidence}%</h3>
-        </div>
-      )}
-      {result && diseaseInfo[result.disease] && (
-        <div style={{ marginTop: "20px" }}>
-            <h3>🩺 Treatment</h3>
-            <p>{diseaseInfo[result.disease].treatment}</p>
-
-            <h3>🌱 Prevention</h3>
-            <p>{diseaseInfo[result.disease].prevention}</p>
-        </div>
-        )}
-
-      {/* 🔥 STEP 7: Treatment + Prevention */}
-      {result && diseaseInfo[result.disease] && (
-        <div style={{ marginTop: "20px" }}>
-          <h3>🩺 Treatment</h3>
-          <p>{diseaseInfo[result.disease].treatment}</p>
-
-          <h3>🌱 Prevention</h3>
-          <p>{diseaseInfo[result.disease].prevention}</p>
-        </div>
-      )}
     </div>
   );
 }
