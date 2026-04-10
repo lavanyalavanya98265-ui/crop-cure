@@ -6,11 +6,12 @@ import Home from "./Home";
 import Upload from "./Upload";
 import Solution from "./Solution";
 import History from "./History";
-
+import Login from "./Login";
 function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/" element={<Login />} />
         <Route path="/" element={<Home />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/upload" element={<Upload />} />

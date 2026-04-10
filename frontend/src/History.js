@@ -6,7 +6,13 @@ function History() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const stored = JSON.parse(localStorage.getItem("history")) || [];
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    if (!user) return;
+
+    const historyKey = `history_${user.name}`;
+    const stored = JSON.parse(localStorage.getItem(historyKey)) || [];
+
     setHistory(stored);
   }, []);
 
@@ -38,12 +44,13 @@ function History() {
               borderRadius: "12px",
               boxShadow: "0px 4px 12px rgba(0,0,0,0.2)",
               cursor: "pointer",
-              transition: "0.3s",
             }}
           >
             <h3>{item.disease}</h3>
             <p><strong>Confidence:</strong> {item.confidence}%</p>
-            <p style={{ fontSize: "12px", color: "gray" }}>{item.time}</p>
+            <p style={{ fontSize: "12px", color: "gray" }}>
+              {item.time}
+            </p>
           </div>
         ))
       )}
