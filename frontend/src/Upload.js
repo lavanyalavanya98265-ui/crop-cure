@@ -1,10 +1,15 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import translations from "./language";
 
 function Upload() {
   const [file, setFile] = useState(null);
   const navigate = useNavigate();
+
+  // 🌐 USER + LANGUAGE
+  const user = JSON.parse(localStorage.getItem("user"));
+  const t = translations[user.language];
 
   const handleUpload = async () => {
     if (!file) {
@@ -23,24 +28,18 @@ function Upload() {
 
       const data = response.data;
 
-      // 🔥 GET USER
-      const user = JSON.parse(localStorage.getItem("user"));
+      // 🔥 USER BASED HISTORY
       const historyKey = `history_${user.name}`;
-
-      // 🔥 GET OLD HISTORY
       const history = JSON.parse(localStorage.getItem(historyKey)) || [];
 
-      // 🔥 ADD NEW ENTRY
       history.unshift({
         disease: data.disease,
         confidence: data.confidence,
         time: new Date().toLocaleString()
       });
 
-      // 🔥 SAVE BACK
       localStorage.setItem(historyKey, JSON.stringify(history));
 
-      // 🔥 NAVIGATE
       navigate("/solution", { state: { result: data } });
 
     } catch (error) {
@@ -49,9 +48,20 @@ function Upload() {
   };
 
   return (
-    <div style={{ textAlign: "center", marginTop: "50px" }}>
-      <h1>📷 Upload Leaf Image</h1>
+    <div
+      style={{
+        textAlign: "center",
+        minHeight: "100vh",
+        background: "linear-gradient(to right, #66bb6a, #a5d6a7)",
+        paddingTop: "80px",
+      }}
+    >
+      {/* 🌿 TITLE */}
+      <h1>📷 {t.uploadTitle}</h1>
 
+      <br />
+
+      {/* 📂 FILE INPUT */}
       <input
         type="file"
         onChange={(e) => setFile(e.target.files[0])}
@@ -59,8 +69,18 @@ function Upload() {
 
       <br /><br />
 
-      <button onClick={handleUpload}>
-        🔍 Predict
+      {/* 🔍 PREDICT BUTTON */}
+      <button
+        onClick={handleUpload}
+        style={{
+          padding: "10px 20px",
+          fontSize: "16px",
+          borderRadius: "8px",
+          border: "none",
+          cursor: "pointer"
+        }}
+      >
+        🔍 {t.predict}
       </button>
     </div>
   );

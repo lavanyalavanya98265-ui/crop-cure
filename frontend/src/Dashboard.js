@@ -1,27 +1,30 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import translations from "./language";
 
 function Dashboard() {
   const navigate = useNavigate();
 
-  // 🔥 GET USER DATA
   const user = JSON.parse(localStorage.getItem("user"));
 
   if (!user) {
-    return <h2>No user found. Please login again.</h2>;
+    return <h2>No user found</h2>;
   }
 
   const { name, language, location } = user;
 
+  // 🌐 GET TRANSLATION
+  const t = translations[language];
+
   return (
     <div style={{ textAlign: "center", marginTop: "50px" }}>
-      <h1>👤 User Dashboard</h1>
+      <h1>👤 {t.dashboard}</h1>
 
-      <p><strong>Name:</strong> {name}</p>
-      <p><strong>Language:</strong> {language}</p>
+      <p><strong>{t.name}:</strong> {name}</p>
+      <p><strong>{t.language}:</strong> {language}</p>
 
       <p>
-        <strong>Location:</strong>{" "}
+        <strong>{t.location}:</strong>{" "}
         {typeof location === "object"
           ? `${location.lat?.toFixed(2)}, ${location.lng?.toFixed(2)}`
           : location || "Not available"}
@@ -30,25 +33,24 @@ function Dashboard() {
       <br />
 
       <button onClick={() => navigate("/upload")}>
-        📷 Start Scan
+        📷 {t.startScan}
       </button>
 
       <br /><br />
 
       <button onClick={() => navigate("/history")}>
-        📜 History
+        📜 {t.history}
       </button>
 
       <br /><br />
 
-      {/* 🔥 LOGOUT BUTTON */}
       <button
         onClick={() => {
           localStorage.removeItem("user");
           navigate("/");
         }}
       >
-        🚪 Logout
+        🚪 {t.logout}
       </button>
     </div>
   );
