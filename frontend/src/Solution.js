@@ -60,76 +60,115 @@ function Solution() {
   const solution = generateSolution(result.disease, user.language);
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "linear-gradient(to right, #66bb6a, #a5d6a7)",
-        padding: "40px",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-      }}
-    >
-      <h1>🌿 Disease Analysis</h1>
+  <div
+    style={{
+      minHeight: "100vh",
+      background: "linear-gradient(135deg, #4caf50, #81c784)",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      padding: "40px",
+      fontFamily: "Segoe UI",
+    }}
+  >
+    <h1 style={{ color: "#fff", marginBottom: "30px" }}>
+      🌿 Disease Analysis
+    </h1>
 
-      {!isUnknown && (
-        <div
-          style={{
-            background: "#ffffff",
-            padding: "20px",
-            borderRadius: "12px",
-            width: "400px",
-            textAlign: "center",
-            boxShadow: "0px 4px 10px rgba(0,0,0,0.2)",
-            marginBottom: "20px",
-          }}
-        >
-          <h2>{t.disease}: {result.disease}</h2>
-          <p><strong>{t.confidence}:</strong> {result.confidence}%</p>
-
-          {!isHealthy && (
-            <p><strong>{t.severity}:</strong> {getSeverity(result.confidence)}</p>
-          )}
-        </div>
-      )}
-
+    {!isUnknown && (
       <div
         style={{
-          background: "#ffffff",
-          padding: "25px",
+          background: "rgba(255,255,255,0.2)",
+          backdropFilter: "blur(10px)",
           borderRadius: "15px",
-          width: "600px",
-          boxShadow: "0px 5px 15px rgba(0,0,0,0.3)",
+          padding: "20px",
+          width: "400px",
+          textAlign: "center",
+          color: "#fff",
+          boxShadow: "0 8px 32px rgba(0,0,0,0.2)",
+          marginBottom: "20px",
+          transition: "0.3s",
         }}
       >
-        {isUnknown ? (
-          <div style={{ textAlign: "center" }}>
-            <h2>⚠️ {t.unknownMsg}</h2>
-            <p>
-              This plant is not supported. Please upload Potato 🥔,
-              Tomato 🍅 or Pepper 🌶️ leaves.
-            </p>
-          </div>
-        ) : isHealthy ? (
-          <div style={{ textAlign: "center" }}>
-            <h2>🌿 {t.healthyMsg}</h2>
-          </div>
-        ) : (
-          <>
-            <div style={{ marginBottom: "20px" }}>
-              <h3>🩺 {t.treatment}</h3>
-              <p>{solution.treatment}</p>
-            </div>
+        <h2>{t.disease}: {result.disease}</h2>
 
-            <div>
-              <h3>🌱 {t.prevention}</h3>
-              <p>{solution.prevention}</p>
-            </div>
-          </>
+        <p>
+          <strong>{t.confidence}:</strong> {result.confidence}%
+        </p>
+
+        {!isHealthy && (
+          <p>
+            <strong>{t.severity}:</strong>{" "}
+            <span
+              style={{
+                color:
+                  result.confidence > 90
+                    ? "#ff5252"
+                    : result.confidence > 70
+                    ? "#ffeb3b"
+                    : "#69f0ae",
+              }}
+            >
+              {getSeverity(result.confidence)}
+            </span>
+          </p>
         )}
       </div>
+    )}
+
+    <div
+      style={{
+        background: "#fff",
+        borderRadius: "20px",
+        padding: "30px",
+        width: "600px",
+        boxShadow: "0 10px 30px rgba(0,0,0,0.3)",
+        transition: "0.3s",
+      }}
+    >
+      {isUnknown ? (
+        <div style={{ textAlign: "center" }}>
+          <h2>⚠️ {t.unknownMsg}</h2>
+          <p>
+            This plant is not supported. Please upload Potato 🥔,
+            Tomato 🍅 or Pepper 🌶️ leaves.
+          </p>
+        </div>
+      ) : isHealthy ? (
+        <div style={{ textAlign: "center" }}>
+          <h2>🌿 {t.healthyMsg}</h2>
+        </div>
+      ) : (
+        <>
+          <div
+            style={{
+              marginBottom: "20px",
+              padding: "15px",
+              borderRadius: "10px",
+              background: "#f1f8e9",
+              transition: "0.3s",
+            }}
+          >
+            <h3>🩺 {t.treatment}</h3>
+            <p>{solution.treatment}</p>
+          </div>
+
+          <div
+            style={{
+              padding: "15px",
+              borderRadius: "10px",
+              background: "#e3f2fd",
+              transition: "0.3s",
+            }}
+          >
+            <h3>🌱 {t.prevention}</h3>
+            <p>{solution.prevention}</p>
+          </div>
+        </>
+      )}
     </div>
-  );
+  </div>
+);
 }
 
 export default Solution;
